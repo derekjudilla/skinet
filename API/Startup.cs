@@ -13,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Core.Interfaces;
+using Infrastructure.Data.Repository;
 
 namespace API
 {
@@ -29,6 +31,7 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<IProductRepository, ProductRepository>(); //addscoped life cycle is when httprequest is requested is finish it will dispose controller and repo and its resources
             // install sql server https://stackoverflow.com/questions/43098065/entity-framework-core-dbcontextoptionsbuilder-does-not-contain-a-definition-f
             services.AddDbContext<StoreContext>(x => 
                 x.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
