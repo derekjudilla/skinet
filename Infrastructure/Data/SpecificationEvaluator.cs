@@ -1,7 +1,7 @@
-using System.Data.Entity;
 using System.Linq;
 using Core.Entities;
 using Core.Specifications;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
 {
