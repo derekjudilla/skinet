@@ -4,3 +4,4 @@ appsettings.json
 *.db
 DesignTimeBuild
 v16
+.vs/skinet/DesignTimeBuild/.dtbcache.v2
