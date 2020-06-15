@@ -27,14 +27,14 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts(string sort)
+        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts(string sort, int? brandId, int? typeId)
         {
             /*
                 var products = await _productsRepo.ListAllAsync();
                 return Ok(products);
             */
             // so we need to include the producttype and brands now this is how the specification + generic works their charm
-            var spec = new ProductsWithTypesAndBrandsSpecification(sort);
+            var spec = new ProductsWithTypesAndBrandsSpecification(sort, brandId, typeId);
 
             var products = await _productsRepo.ListAsync(spec);
             /*it would be efficient to do this in specification but we just keep it simple for now*/
