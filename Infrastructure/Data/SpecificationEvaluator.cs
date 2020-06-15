@@ -17,6 +17,16 @@ namespace Infrastructure.Data
                 query = query.Where(spec.Criteria); //ex p => p/ProductTypeId == id this line of code will replace inside Where("here replace")
             }
 
+            if (spec.OrderBy != null)
+            {
+                query = query.OrderBy(spec.OrderBy);
+            }
+
+            if (spec.OrderByDescending != null)
+            {
+                query = query.OrderByDescending(spec.OrderByDescending);
+            }
+
             query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
             
             #region Equivalent of query see inside
