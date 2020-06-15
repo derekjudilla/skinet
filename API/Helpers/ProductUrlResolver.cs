@@ -2,7 +2,6 @@
 using AutoMapper;
 using Core.Entities;
 using Microsoft.Extensions.Configuration;
-using System;
 
 namespace API.Helpers
 {

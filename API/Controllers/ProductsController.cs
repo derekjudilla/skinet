@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Core.Interfaces;
 using Core.Specifications;
 using API.Dtos;
-using System.Linq;
 using AutoMapper;
+using API.Errors;
+using Microsoft.AspNetCore.Http;
 
 namespace API.Controllers
 {
@@ -56,6 +57,8 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)] // this is for swagger for it to document 
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)] // specified the type of so that in swagger it knows the return type
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             // since we change the return below the original public async Task<ActionResult<Product>> GetProduct(int id) will change to producttoreturndeto
@@ -75,6 +78,8 @@ namespace API.Controllers
             //    ProductType = product.ProductType.Name
             //};
             //So we now use the automapper nuget package for us not to always code the ProductTOreturnDto since we want it to automap by itself
+            if (product == null) return NotFound(new ApiResponse(404));
+
             return _mapper.Map<Product, ProductToReturnDto>(product);
         }
 
