@@ -28,7 +28,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ProductToReturnDto>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts()
         {
             /*
                 var products = await _productsRepo.ListAllAsync();
@@ -41,16 +41,19 @@ namespace API.Controllers
             /*it would be efficient to do this in specification but we just keep it simple for now*/
 
             //return Ok(products); so we need to flatten this out too same as below getproduct by id
-            return products.Select(product => new ProductToReturnDto
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                PictureUrl = product.PictureUrl,
-                Price = product.Price,
-                ProductBrand = product.ProductBrand.Name,
-                ProductType = product.ProductType.Name
-            }).ToList();
+            //return products.Select(product => new ProductToReturnDto
+            //{
+            //    Id = product.Id,
+            //    Name = product.Name,
+            //    Description = product.Description,
+            //    PictureUrl = product.PictureUrl,
+            //    Price = product.Price,
+            //    ProductBrand = product.ProductBrand.Name,
+            //    ProductType = product.ProductType.Name
+            //}).ToList();
+
+            //since we now have an automapper we need to change now the return
+            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));
 
         }
 
