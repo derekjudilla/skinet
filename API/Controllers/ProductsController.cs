@@ -8,6 +8,7 @@ using API.Dtos;
 using AutoMapper;
 using API.Errors;
 using Microsoft.AspNetCore.Http;
+using API.Helpers;
 
 namespace API.Controllers
 {
@@ -27,15 +28,16 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts(string sort, int? brandId, int? typeId)
+        public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery]ProductSpecParams productSpecParams)
         {
             /*
                 var products = await _productsRepo.ListAllAsync();
                 return Ok(products);
             */
             // so we need to include the producttype and brands now this is how the specification + generic works their charm
-            var spec = new ProductsWithTypesAndBrandsSpecification(sort, brandId, typeId);
-
+            var spec = new ProductsWithTypesAndBrandsSpecification(productSpecParams);
+            var countSpec = new ProductWithFiltersForCountSpecification(productSpecParams);
+            var totalItems = await _productsRepo.CountAsync(countSpec);
             var products = await _productsRepo.ListAsync(spec);
             /*it would be efficient to do this in specification but we just keep it simple for now*/
 
@@ -52,7 +54,10 @@ namespace API.Controllers
             //}).ToList();
 
             //since we now have an automapper we need to change now the return
-            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));
+            //return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));
+            /*apply pagination*/
+            var data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
+            return Ok(new Pagination<ProductToReturnDto>(productSpecParams.PageIndex, productSpecParams.PageSize, totalItems, data));
 
         }
 

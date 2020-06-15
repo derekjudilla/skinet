@@ -14,7 +14,8 @@ namespace Infrastructure.Data
             
             if (spec.Criteria != null)
             {
-                query = query.Where(spec.Criteria); //ex p => p/ProductTypeId == id this line of code will replace inside Where("here replace")
+                query = query.Where(spec.Criteria); 
+                //ex p => p/ProductTypeId == id this line of code will replace inside Where("here replace")
             }
 
             if (spec.OrderBy != null)
@@ -25,6 +26,12 @@ namespace Infrastructure.Data
             if (spec.OrderByDescending != null)
             {
                 query = query.OrderByDescending(spec.OrderByDescending);
+            }
+
+            if (spec.IsPagingEnabled) 
+            // so as you can see here this is at the bottom since we need first to get all conditions above before applying pagination
+            {
+                query = query.Skip(spec.Skip).Take(spec.Take);
             }
 
             query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
